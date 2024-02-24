@@ -10,10 +10,10 @@ import VueAxios from 'vue-axios'
 import { Field, Form, ErrorMessage, defineRule, configure } from 'vee-validate'
 import * as VeeValidateRules from '@vee-validate/rules'
 import * as VeeValidateI18n from '@vee-validate/i18n'
+import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
 // 內部
 import App from './App.vue'
 import router from './router'
-
 const app = createApp(App)
 app.use(createPinia())
 app.component('VForm', Form)
@@ -30,14 +30,13 @@ configure({
   validateOnInput: true // 調整為：輸入文字時，就立即進行驗證
 })
 
-// 讀取外部的資源
-VeeValidateI18n.loadLocaleFromURL('../public/zh_TW.json')
-
 // Activate the locale
 configure({
-  generateMessage: VeeValidateI18n.localize('zh_TW'),
+  generateMessage: VeeValidateI18n.localize({ zh_TW: zhTW }),
   validateOnInput: true // 調整為：輸入文字時，就立即進行驗證
 })
+// 使用 setLocale() 設定環境語言
+VeeValidateI18n.setLocale('zh_TW')
 app.use(router)
 app.use(LoadingPlugin)
 app.use(VueAxios, axios)
