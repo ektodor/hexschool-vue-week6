@@ -69,14 +69,12 @@
 
 <script>
 import PaginationComponent from '@/components/PaginationComponent.vue'
-import ModalComponent from '../../components/ModalComponent.vue'
-
+import ModalComponent from '@/components/ModalComponent.vue'
+const { VITE_APP_URL, VITE_APP_API_NAME } = import.meta.env
 // let openDetailModal
 export default {
   data () {
     return {
-      apiUrl: import.meta.env.VITE_APP_API_URL,
-      apiPath: import.meta.env.VITE_APP_API_NAME,
       products: [],
       pagination: {},
       tempProduct: {},
@@ -94,7 +92,7 @@ export default {
     getProducts (page = 1) {
       const loader = this.$loading.show()
       this.$http
-        .get(`${this.apiUrl}/api/${this.apiPath}/products?page=${page}`)
+        .get(`${VITE_APP_URL}/api/${VITE_APP_API_NAME}/products?page=${page}`)
         .then((res) => {
           this.products = res.data.products
           this.pagination = res.data.pagination
@@ -105,10 +103,11 @@ export default {
         })
     },
     // 單一產品細節 好像沒用到?! 因為 getProducts 以取得內容
+    // 助教回復：單一產品細節函式如果要使用，也可以用在 openModal 的時候，或之後有獨立的單一細節頁面時（需做動態路由的配置）
     getSingleProduct (id) {
       this.isDetailLoading = true
       this.$http
-        .get(`${this.apiUrl}/api/${this.apiPath}/product/${id}`)
+        .get(`${VITE_APP_URL}/api/${VITE_APP_API_NAME}/product/${id}`)
         .then((res) => {
           this.tempProduct = res.data.product
           this.isDetailLoading = false
@@ -121,7 +120,7 @@ export default {
     addProduct (id, qty = 1) {
       this.isDetailLoading = true
       this.$http
-        .post(`${this.apiUrl}/api/${this.apiPath}/cart`, {
+        .post(`${VITE_APP_URL}/api/${VITE_APP_API_NAME}/cart`, {
           data: {
             product_id: id,
             qty

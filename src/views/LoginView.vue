@@ -42,11 +42,10 @@
 </template>
 
 <script>
+const { VITE_APP_URL } = import.meta.env
 export default {
   data () {
     return {
-      apiUrl: import.meta.env.VITE_APP_API_URL,
-      apiPath: import.meta.env.VITE_APP_API_NAME,
       username: '',
       password: ''
     }
@@ -54,7 +53,7 @@ export default {
   methods: {
     login () {
       this.$http
-        .post(`${this.apiUrl}/admin/signin`, {
+        .post(`${VITE_APP_URL}/admin/signin`, {
           username: this.username,
           password: this.password
         })

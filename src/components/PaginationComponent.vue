@@ -39,7 +39,6 @@ export default {
   props: ['pagination'],
   methods: {
     getProducts (page = 1) {
-      console.log(this.pagination)
       this.$emit('get-products', page)
     }
   }

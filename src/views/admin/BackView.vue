@@ -7,19 +7,15 @@
 </template>
 
 <script>
+const { VITE_APP_URL } = import.meta.env
 export default {
-  data () {
-    return {
-      apiUrl: import.meta.env.VITE_APP_API_URL,
-      apiPath: import.meta.env.VITE_APP_API_NAME
-    }
-  },
   methods: {
     logout () {
       this.$http
-        .post(`${this.apiUrl}/logout`, {})
+        .post(`${VITE_APP_URL}/logout`, {})
         .then(() => {
-          document.cookie = 'token=; expires=; path=/'
+          document.cookie = 'token=; expired=;'
+          alert('登出成功')
           this.$router.push('/login')
         })
         .catch((err) => {

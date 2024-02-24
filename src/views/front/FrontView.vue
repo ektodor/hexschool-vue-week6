@@ -7,23 +7,22 @@
     <RouterView />
 </template>
 <script>
+const { VITE_APP_API_URL } = import.meta.env
 export default {
   data () {
     return {
-      apiUrl: import.meta.env.VITE_APP_API_URL,
       loginState: false
     }
   },
   mounted () {
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1')
-    console.log(token)
     if (!token) {
       this.loginState = false
       return
     }
     this.$http.defaults.headers.common.Authorization = token
     this.$http
-      .post(`${this.apiUrl}/api/user/check`, {})
+      .post(`${VITE_APP_API_URL}/api/user/check`, {})
       .then((res) => {
         this.loginState = true
       })

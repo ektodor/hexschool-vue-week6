@@ -4,6 +4,7 @@
             <button
               @click='deleteAllProducts'
               class="btn btn-outline-danger"
+              :class="{ disabled: !cart?.carts?.length }"
               type="button"
             >
               清空購物車
@@ -46,7 +47,7 @@
                           min="1"
                           type="number"
                           class="form-control"
-                          @blur="updateCartQuantity(item.id, item.qty)"
+                          @blur="updateCartQuantity(item.id ,item.product.id, item.qty)"
                         />
                         <span class="input-group-text" id="basic-addon2"
                           >{{ item.product.unit }}</span
@@ -167,8 +168,7 @@
               ></textarea>
             </div>
             <div class="text-end">
-              <button v-if="cart.carts.length > 0" type="submit" class="btn btn-danger">送出訂單</button>
-              <button v-else type="submit" class="btn btn-danger disabled">送出訂單</button>
+              <button :class="{ disabled: !cart?.carts?.length }" type="submit" class="btn btn-danger">送出訂單</button>
             </div>
           </v-form>
         </div>
@@ -176,11 +176,10 @@
 </template>
 
 <script>
+const { VITE_APP_URL, VITE_APP_API_NAME } = import.meta.env
 export default {
   data () {
     return {
-      apiUrl: import.meta.env.VITE_APP_API_URL,
-      apiPath: import.meta.env.VITE_APP_API_NAME,
       cart: {},
       user: {
         name: '',
@@ -198,7 +197,7 @@ export default {
     getCartProducts () {
       // console.log("購物車列表");
       this.$http
-        .get(`${this.apiUrl}/api/${this.apiPath}/cart`)
+        .get(`${VITE_APP_URL}/api/${VITE_APP_API_NAME}/cart`)
         .then((res) => {
           this.cart = JSON.parse(JSON.stringify(res.data.data))
           this.isDetailLoading = false
@@ -213,7 +212,7 @@ export default {
       this.isCartLoading = true
       // console.log("刪除購物車項目 單一", id);
       this.$http
-        .delete(`${this.apiUrl}/api/${this.apiPath}/cart/${id}`)
+        .delete(`${VITE_APP_URL}/api/${VITE_APP_API_NAME}/cart/${id}`)
         .then((res) => {
           this.getCartProducts()
           alert('購物車更新成功')
@@ -226,7 +225,7 @@ export default {
     deleteAllProducts () {
       // console.log("刪除購物車項目 全部");
       this.$http
-        .delete(`${this.apiUrl}/api/${this.apiPath}/carts`)
+        .delete(`${VITE_APP_URL}/api/${VITE_APP_API_NAME}/carts`)
         .then((res) => {
           this.getCartProducts()
           alert('購物車更新成功')
@@ -236,13 +235,13 @@ export default {
         })
     },
     // 購物車產品數量
-    updateCartQuantity (id, qty) {
+    updateCartQuantity (id, productId, qty) {
       this.isCartLoading = true
       // console.log("購物車產品數量", id, qty);
       this.$http
-        .put(`${this.apiUrl}/api/${this.apiPath}/cart/${id}`, {
+        .put(`${VITE_APP_URL}/api/${VITE_APP_API_NAME}/cart/${id}`, {
           data: {
-            product_id: id,
+            product_id: productId,
             qty
           }
         })
@@ -257,7 +256,7 @@ export default {
     // 結帳
     checkoutProducts () {
       this.$http
-        .post(`${this.apiUrl}/api/${this.apiPath}/order`, {
+        .post(`${VITE_APP_URL}/api/${VITE_APP_API_NAME}/order`, {
           data: {
             user: this.user,
             message: this.message
