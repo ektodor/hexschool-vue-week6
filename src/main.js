@@ -27,11 +27,6 @@ Object.keys(VeeValidateRules).forEach((rule) => {
 
 // Activate the locale
 configure({
-  validateOnInput: true // 調整為：輸入文字時，就立即進行驗證
-})
-
-// Activate the locale
-configure({
   generateMessage: VeeValidateI18n.localize({ zh_TW: zhTW }),
   validateOnInput: true // 調整為：輸入文字時，就立即進行驗證
 })
